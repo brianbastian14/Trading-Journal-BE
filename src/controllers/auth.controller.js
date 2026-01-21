@@ -2,6 +2,7 @@ const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const sendEmail = require('../utils/sendEmail')
+const  env  = require('../config/env');
 
 exports.login = async (req, res) => {
   const { identifier, password } = req.body
