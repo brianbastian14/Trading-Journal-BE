@@ -3,17 +3,32 @@ const cors = require('cors')
 
 const app = express()
 
-app.use(cors({
-  origin: [
-    'https://trading-journal-fe.vercel.app',
-    'http://localhost:5173'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}))
+app.use((req, res, next) => {
+  res.setHeader(
+    'Access-Control-Allow-Origin',
+    'https://trading-journal-fe.vercel.app'
+  )
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET,POST,PUT,DELETE,OPTIONS'
+  )
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization'
+  )
+  res.setHeader(
+    'Access-Control-Allow-Credentials',
+    'true'
+  )
 
-app.options('*', cors())
+  // ⬅️ INI SUDAH CUKUP, JANGAN app.options('*')
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200)
+  }
+
+  next()
+})
+
 app.use(express.json())
 
 app.get('/', (_req, res) => {
