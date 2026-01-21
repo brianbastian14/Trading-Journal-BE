@@ -16,6 +16,12 @@ app.use(cors({
 app.options('*', cors())
 app.use(express.json())
 
+app.get('/', (_req, res) => {
+  res.type('text').send('BACKEND CONNECTED');
+});
+
+app.get('/health', (_req, res) => res.json({ ok: true }));
+
 app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/trades', require('./routes/trade.routes'))
 
