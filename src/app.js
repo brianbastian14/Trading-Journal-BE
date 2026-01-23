@@ -3,31 +3,25 @@ const cors = require('cors')
 
 const app = express()
 
-app.use((req, res, next) => {
-  res.setHeader(
-    'Access-Control-Allow-Origin',
-    'https://trading-journal-fe.vercel.app'
-  )
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET,POST,PUT,DELETE,OPTIONS'
-  )
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization'
-  )
-  res.setHeader(
-    'Access-Control-Allow-Credentials',
-    'true'
-  )
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://mytradejournal.vercel.app'
+]
 
-  // ⬅️ INI SUDAH CUKUP, JANGAN app.options('*')
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200)
-  }
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true)
 
-  next()
-})
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('CORS not allowed'))
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}))
 
 app.use(express.json())
 
